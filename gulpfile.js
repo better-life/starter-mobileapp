@@ -6,12 +6,13 @@ var sass = require('gulp-sass');
 var minifyCss = require('gulp-minify-css');
 var rename = require('gulp-rename');
 var sh = require('shelljs');
+var plug = require('gulp-load-plugins')();
 
 var paths = {
   sass: ['./scss/**/*.scss']
 };
 
-gulp.task('default', ['sass']);
+gulp.task('default', ['sass', 'templatecache', 'js']);
 
 gulp.task('sass', function(done) {
   gulp.src('./scss/ionic.app.scss')
@@ -47,4 +48,35 @@ gulp.task('git-check', function(done) {
     process.exit(1);
   }
   done();
+});
+
+gulp.task('templatecache', function() {
+    log('Creating an AngularJS $templateCache');
+
+    gulp.src('./www/partials/**/*.html');
+      .pipe(plug.angularTemplatecache('templates.js', {
+          module: 'myapp',
+          standalone: false,
+          root: 'partials/'
+      }))
+      .pipe(gulp.dest('./www/js/'));
+      .on('end', done);
+});
+
+gulp.task('js', function() {
+    log('Bundling, minifying, and copying the partial\'s JavaScript');
+
+    var source = [
+      "./www/partials/**/*.js",
+      "./www/js/templates.js",
+      "!./www/js/*partials.min.js*"
+      ];
+    return gulp
+        .src(source)
+        .pipe(plug.concat('partials.min.js'))
+        .pipe(plug.ngAnnotate({add: true, single_quotes: true}))
+        .pipe(plug.bytediff.start())
+        .pipe(plug.uglify({mangle: true}))
+        .pipe(plug.bytediff.stop(common.bytediffFormatter))
+        .pipe(gulp.dest('./www/js/'));
 });
