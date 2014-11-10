@@ -50,33 +50,33 @@ gulp.task('git-check', function(done) {
   done();
 });
 
-gulp.task('templatecache', function() {
-    log('Creating an AngularJS $templateCache');
+gulp.task('templatecache', ['sass'], function(cb) {
+    gutil.log('Creating an AngularJS $templateCache');
 
-    gulp.src('./www/partials/**/*.html');
+    gulp.src('./www/partials/**/*.html')
       .pipe(plug.angularTemplatecache('templates.js', {
           module: 'myapp',
           standalone: false,
           root: 'partials/'
       }))
-      .pipe(gulp.dest('./www/js/'));
-      .on('end', done);
+      .pipe(gulp.dest('./www/js/'))
+      .on('end', cb);
 });
 
-gulp.task('js', function() {
-    log('Bundling, minifying, and copying the partial\'s JavaScript');
+gulp.task('js', ['templatecache'], function() {
+    gutil.log('Bundling, minifying, and copying the partial\'s JavaScript');
 
     var source = [
       "./www/partials/**/*.js",
       "./www/js/templates.js",
       "!./www/js/*partials.min.js*"
       ];
+
     return gulp
         .src(source)
         .pipe(plug.concat('partials.min.js'))
-        .pipe(plug.ngAnnotate({add: true, single_quotes: true}))
         .pipe(plug.bytediff.start())
         .pipe(plug.uglify({mangle: true}))
-        .pipe(plug.bytediff.stop(common.bytediffFormatter))
+        .pipe(plug.bytediff.stop())
         .pipe(gulp.dest('./www/js/'));
 });
