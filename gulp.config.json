@@ -1,0 +1,30 @@
+{
+  "client":"./html/",
+  "html":"./html/**/*.html", 
+  "htmltemplates": "./html/partials/**/*.html",
+  "vendorjs": [
+    "./html/lib/ionic/js/ionic.bundle.js",
+    "./html/lib/moment/moment.js"
+  ],
+  "vendorcss": [
+    "./html/lib/ionic/css/ionic.css"
+  ],
+  "css": [
+    "./html/css/*.css"
+  ],
+  "js": [
+    "./html/js/app.js",
+    "./html/partials/**/*.js"
+  ],
+  "nodejs": [
+    "./server/**/*.js"
+  ],
+  "fonts": [
+    "./html/lib/ionic/fonts/**/*.*"
+  ],
+  "images": [
+    "./html/images/**/*"
+  ],
+  "build": "./www/",
+  "report":"./report"
+}
