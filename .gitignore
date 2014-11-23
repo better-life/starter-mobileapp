@@ -4,6 +4,4 @@
 node_modules/
 platforms/
 plugins/
-www/js/partials.min.js
-www/js/templates.js
-www/lib
+www/*
