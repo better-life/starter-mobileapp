@@ -1,3 +1,33 @@
+First install node on your system
+
+After node is installed.
+
+Follow below commands to run the application
+
+```bash
+$ npm install
+```
+
+if error is occured try executing above command using sudo or as root
+
+this will install the dependency
+
+then execute below command to install the libraries and vendor modules used in the application
+
+```bash
+$ bower install
+```
+
+after required libraries are installed execute below command to build and run the app
+
+```bash
+$ gulp
+```
+
+============
+
+
+
 Ionic App Base
 =====================
 
