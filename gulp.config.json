@@ -4,7 +4,10 @@
   "htmltemplates": "./html/partials/**/*.html",
   "vendorjs": [
     "./html/lib/ionic/js/ionic.bundle.js",
-    "./html/lib/moment/moment.js"
+    "./html/lib/moment/moment.js",
+    "./html/lib/moment/locale/ar.js",
+    "./html/lib/angular-translate/angular-translate.js",
+    "./html/lib/angular-translate-loader-static-files/angular-translate-loader-static-files.js"
   ],
   "vendorcss": [
     "./html/lib/ionic/css/ionic.css"
@@ -14,6 +17,7 @@
   ],
   "js": [
     "./html/js/app.js",
+    "./html/js/**/*.js",
     "./html/partials/**/*.js"
   ],
   "nodejs": [
@@ -24,6 +28,9 @@
   ],
   "images": [
     "./html/images/**/*"
+  ],
+  "data":[
+    "./html/data/**/*.json"
   ],
   "build": "./www/",
   "report":"./report"

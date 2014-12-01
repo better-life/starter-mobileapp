@@ -5,10 +5,8 @@
 // add your plugins to this list--either the identifier, the filesystem location or the URL
 var pluginlist = [
     "org.apache.cordova.device",
-    "org.apache.cordova.device-motion",
-    "org.apache.cordova.device-orientation",
-    "org.apache.cordova.geolocation",
-    "https://github.com/chrisekelley/AppPreferences/"
+    "com.ionic.keyboard",
+    "https://github.com/phonegap-build/PushPlugin"
 ];
 
 // no need to configure below

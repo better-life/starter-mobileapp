@@ -86,7 +86,10 @@ gulp.task('css', function() {
         .pipe(plug.concat('all.min.css')) // Before bytediff or after
         .pipe(plug.autoprefixer('last 2 version', '> 5%'))
         .pipe(plug.bytediff.start())
-        .pipe(plug.minifyCss({}))
+        .pipe(plug.minifyCss({
+            cache:false,
+            noAdvanced:true
+        }))
         .pipe(plug.bytediff.stop(bytediffFormatter))
         .pipe(gulp.dest(paths.build + 'css'))
         .pipe(connect.reload());
@@ -132,9 +135,9 @@ gulp.task('images', function() {
     log('Compressing, caching, and copying images');
     return gulp
         .src(paths.images)
-        .pipe(plug.cache(plug.imagemin({
+       /* .pipe(plug.cache(plug.imagemin({
             optimizationLevel: 3
-        })))
+        }))) */
         .pipe(gulp.dest(dest))
         .pipe(connect.reload());;
 });
@@ -189,11 +192,19 @@ gulp.task('rev-and-inject', ['js', 'vendorjs', 'css', 'vendorcss'], function() {
     }
 });
 
+gulp.task('data',function(){
+    var dest = paths.build + 'data';
+    log('copying data');
+    return gulp
+        .src(paths.data)
+        .pipe(gulp.dest(dest))
+        .pipe(connect.reload());;
+});
 /**
  * Build the optimized app
  * @return {Stream}
  */
-gulp.task('default', ['rev-and-inject', 'images', 'fonts','watch','connect'], function() {
+gulp.task('default', ['rev-and-inject', 'images', 'fonts', 'data','watch','connect'], function() {
     log('Building the optimized app');
 
     return gulp.src('').pipe(plug.notify({
@@ -211,7 +222,7 @@ gulp.task('default', ['rev-and-inject', 'images', 'fonts','watch','connect'], fu
 gulp.task('clean', function(cb) {
     log('Cleaning: ' + plug.util.colors.blue(paths.build));
 
-    var delPaths = [].concat(paths.build, paths.report);
+    var delPaths = [].concat(paths.build+'*', paths.report);
     del(delPaths, cb);
 });
 
@@ -229,6 +240,7 @@ gulp.task('watch', function () {
     gulp.watch(paths.css, ['css']);
     gulp.watch(paths.images, ['images']);
     gulp.watch(paths.fonts, ['fonts']);
+    gulp.watch(paths.data,['data']);
 });
 
 
