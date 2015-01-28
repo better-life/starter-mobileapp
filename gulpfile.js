@@ -32,7 +32,7 @@ gulp.task('templatecache', function() {
         empty:true
       }))
       .pipe(plug.angularTemplatecache('templates.js', {
-          module: 'myapp',
+          module: 'myApp',
           standalone: false,
           root: 'partials/'
       }))
@@ -222,7 +222,7 @@ gulp.task('default', ['rev-and-inject', 'images', 'fonts', 'data','watch','conne
 gulp.task('clean', function(cb) {
     log('Cleaning: ' + plug.util.colors.blue(paths.build));
 
-    var delPaths = [].concat(paths.build+'*', paths.report);
+    var delPaths = [].concat(paths.build+'*');
     del(delPaths, cb);
 });
 
@@ -235,6 +235,7 @@ gulp.task('connect', function(){
 });
 
 gulp.task('watch', function () {
+    gulp.watch(paths.client+'index.html',['js']);
     gulp.watch(paths.htmltemplates, ['js']);
     gulp.watch(paths.js, ['js']);
     gulp.watch(paths.css, ['css']);
@@ -251,8 +252,9 @@ gulp.task('watch', function () {
 function startPlatoVisualizer() {
     log('Running Plato');
 
-    var files = glob.sync('./html/js/**/*.js');
-
+    var files = glob.sync('./html/**/*.js');
+    var excludeFiles = /\/src\/client\/app\/.*\.spec\.js/;
+    
     var options = {
         title: 'Plato Inspections Report',
         exclude: excludeFiles
