@@ -11,6 +11,7 @@ var connect = require('gulp-connect');
 
 var serverPort = 8000;
 var livereloadPort = 35777;
+var mode = "default";
 
 gulp.task('analyze', function() {
     log('Analyzing source with JSHint, JSCS, and Plato');
@@ -25,6 +26,7 @@ gulp.task('analyze', function() {
 
 
 gulp.task('templatecache', function() {
+    
     log('Creating an AngularJS $templateCache');
     
     return gulp.src(paths.htmltemplates)
@@ -40,6 +42,7 @@ gulp.task('templatecache', function() {
 });
 
 gulp.task('js', ['templatecache'], function() {
+    
     log('Bundling, minifying, and copying the partial\'s JavaScript');
 
     var source = [].concat(paths.js, paths.build+'templates.js');
@@ -79,7 +82,8 @@ gulp.task('vendorjs', function() {
  * Minify and bundle the CSS
  * @return {Stream}
  */
-gulp.task('css', function() {
+gulp.task('css', ['sass'], function() {
+    
     log('Bundling, minifying, and copying the app\'s CSS');
 
     return gulp.src(paths.css)
@@ -113,6 +117,13 @@ gulp.task('vendorcss', function() {
         .pipe(gulp.dest(paths.build + 'css'));
 });
 
+gulp.task('sass',function(){
+    var dest = './html/css/';
+    return gulp.src(paths.sass)
+        .pipe(plug.sass())
+        .pipe(gulp.dest(dest))
+        .pipe(connect.reload());
+});
 /**
  * Copy fonts
  * @return {Stream}
@@ -204,7 +215,7 @@ gulp.task('data',function(){
  * Build the optimized app
  * @return {Stream}
  */
-gulp.task('default', ['rev-and-inject', 'images', 'fonts', 'data','watch','connect'], function() {
+gulp.task('build', ['rev-and-inject', 'images', 'fonts', 'data','watch','connect'], function() {
     log('Building the optimized app');
 
     return gulp.src('').pipe(plug.notify({
@@ -213,6 +224,20 @@ gulp.task('default', ['rev-and-inject', 'images', 'fonts', 'data','watch','conne
     }));
 });
 
+gulp.task('debugmode',function(){
+    mode = "debug";
+    paths.build = paths.client; 
+});
+
+gulp.task('default',['debugmode','watch','connect'], function() {
+    
+    log('Debuggin the app');
+
+    return gulp.src('').pipe(plug.notify({
+        onLast: true,
+        message: 'Deployed code!'
+    }));
+});
 /**
  * Remove all files from the build folder
  * One way to run clean before all tasks is to run
@@ -227,6 +252,7 @@ gulp.task('clean', function(cb) {
 });
 
 gulp.task('connect', function(){
+    
     connect.server({
       root: paths.build,
       port: serverPort,
@@ -235,13 +261,26 @@ gulp.task('connect', function(){
 });
 
 gulp.task('watch', function () {
-    gulp.watch(paths.client+'index.html',['js']);
-    gulp.watch(paths.htmltemplates, ['js']);
-    gulp.watch(paths.js, ['js']);
-    gulp.watch(paths.css, ['css']);
-    gulp.watch(paths.images, ['images']);
-    gulp.watch(paths.fonts, ['fonts']);
-    gulp.watch(paths.data,['data']);
+    if(mode=="debug"){
+        gulp.watch(paths.client+'index.html',function(){ return gulp.src(paths.client+'index.html').pipe(connect.reload()); });
+        gulp.watch(paths.htmltemplates, function(){ return gulp.src(paths.htmltemplates).pipe(connect.reload()); });
+        gulp.watch(paths.js, function(){ return gulp.src(paths.js).pipe(connect.reload()); });
+        gulp.watch(paths.sass,['sass'],function(){ return gulp.src(paths.css).pipe(connect.reload()); });
+        gulp.watch(paths.css, function(){ return gulp.src(paths.css).pipe(connect.reload()); });
+        gulp.watch(paths.images, ['images']);
+        gulp.watch(paths.fonts, ['fonts']);
+        gulp.watch(paths.data,['data']);
+    
+    }else{
+        gulp.watch(paths.client+'index.html',['js']);
+        gulp.watch(paths.htmltemplates, ['js']);
+        gulp.watch(paths.js, ['js']);
+        gulp.watch(paths.sass,['css']);
+        gulp.watch(paths.css, ['css']);
+        gulp.watch(paths.images, ['images']);
+        gulp.watch(paths.fonts, ['fonts']);
+        gulp.watch(paths.data,['data']);
+        }
 });
 
 

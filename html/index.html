@@ -6,12 +6,12 @@
     <title></title>
 
     <!-- inject-vendor:css -->
-    <link href="lib/ionic/css/ionic.css" rel="stylesheet">
     <link href="lib/ionicons/css/ionicons.css" rel="stylesheet">
     <!-- endinject -->
 
 
     <!-- inject:css -->
+    <link href="css/ionic.app.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
     <!-- endinject -->
 
@@ -19,25 +19,22 @@
     <script src="cordova.js"></script>
   </head>
   <body ng-app="myApp">
-    <!--
-      The nav bar that will be updated as we navigate between views.
-    -->
-    <ion-nav-bar class="bar-stable">
-      <ion-nav-back-button>
-      </ion-nav-back-button>
-    </ion-nav-bar>
-    <!--
-      The views will be rendered in the <ion-nav-view> directive below
-      Templates are in the /templates folder (but you could also
-      have templates inline in this html file if you'd like).
-    -->
+    
     <ion-nav-view></ion-nav-view>
 
     <!-- inject-vendor:js -->
-      <script src="lib/ionic/js/ionic.bundle.js"></script>
+    <script src="lib/ionic/js/ionic.bundle.js"></script>
     <!-- endinject -->
 
     <!-- inject:js -->
+    <script src="partials/app.module.js"></script>
+    
+    <script src="partials/authentication/authentication.module.js"></script>
+    <script src="partials/authentication/authentication.factory.js"></script>
+    <script src="partials/authentication/authentication.controller.js"></script>
+    
+    <script src="partials/demo/app.js"></script>
+
     <!-- endinject -->
   </body>
 </html>
